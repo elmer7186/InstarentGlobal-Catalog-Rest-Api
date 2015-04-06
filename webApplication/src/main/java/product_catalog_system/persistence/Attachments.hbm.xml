@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 4/04/2015 10:16:30 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="product_catalog_system.domain.Attachments" table="attachments" catalog="store">
+        <id name="id" type="java.lang.Integer">
+            <column name="id" />
+            <generator class="increment" />
+        </id>
+        <many-to-one name="product" class="product_catalog_system.domain.Product" fetch="join" lazy="false">
+            <column name="product" length="10" not-null="true" />
+        </many-to-one>
+        <property name="attachment" type="string">
+            <column name="attachment" length="150" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

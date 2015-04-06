@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 4/04/2015 10:16:30 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="product_catalog_system.domain.Product" table="product" catalog="store">
+        <id name="id" type="string">
+            <column name="id" length="10" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="catalog" class="product_catalog_system.domain.Catalog" fetch="join" lazy="false">
+            <column name="catalog_id" length="10" not-null="true" />
+        </many-to-one>
+        <property name="name" type="string">
+            <column name="name" length="30" />
+        </property>
+        <property name="description" type="string">
+            <column name="description" length="200" />
+        </property>
+        <property name="price" type="java.lang.Integer">
+            <column name="price" />
+        </property>
+        <property name="uom" type="string">
+            <column name="uom" length="3" />
+        </property>
+        <property name="createdAt" type="date">
+            <column name="created_at" length="10" />
+        </property>
+        <set name="attachmentses" table="attachments" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="product" length="10" not-null="true" />
+            </key>
+            <one-to-many class="product_catalog_system.domain.Attachments" />
+        </set>
+    </class>
+</hibernate-mapping>

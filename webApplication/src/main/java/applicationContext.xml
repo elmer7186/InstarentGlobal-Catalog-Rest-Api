@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:context="http://www.springframework.org/schema/context"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+        
+        <!-- BEANS  CONFIGURACION DATASOURCE-->
+        
+        <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+            <property name="driverClassName">
+                    <value>com.mysql.jdbc.Driver</value>  
+            </property>
+            <property name="url">
+                    <value>jdbc:mysql://localhost:3306/store</value>
+            </property>
+            <property name="username">
+                    <value>root</value>
+            </property>
+            <property name="password"> 
+                    <value></value>
+            </property>
+        </bean>
+        
+        <!-- BEANS CONFIGURACION HIBERNATE-->
+        <bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"></property>
+		<property name="mappingResources">
+			<list>
+				<value>product_catalog_system/persistence/Product.hbm.xml</value>
+				<value>product_catalog_system/persistence/Catalog.hbm.xml</value>
+				<value>product_catalog_system/persistence/Attachments.hbm.xml</value>
+			</list>
+		</property>
+            
+            <property name="hibernateProperties">
+                <props>
+                    <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+                    <prop key="hibernate.show-sql">true</prop>
+                </props>
+        	</property>      
+        </bean>
+		
+		
+		<!-- SE CREAN LOS BEANS CORRESPONDIENTES A LOS DAO's -->
+		
+		
+		<bean id="catalogDao" class="product_catalog_system.dao.CatalogDaoImpl">
+        	<property name="sessionFactory" ref="sessionFactory" />
+        </bean>
+        
+        <bean id="productDao" class="product_catalog_system.dao.ProductDaoImpl">
+        	<property name="sessionFactory" ref="sessionFactory" />
+        </bean>
+        
+        <context:component-scan base-package="product_catalog_system.services"></context:component-scan> 
+        
+        <bean id="productoService" class="product_catalog_system.services.ProductService">
+        	<property name="catalogDao" ref="catalogDao" />
+        	<property name="productDao" ref="productDao" />
+        </bean>
+</beans>
