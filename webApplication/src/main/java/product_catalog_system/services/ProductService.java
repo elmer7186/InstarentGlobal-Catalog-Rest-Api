@@ -215,6 +215,13 @@ public class ProductService {
 		}
 		
 		/**
+		 * verificamos variable uom
+		 */
+		if(!verificarUom(uom)){
+			return Response.status(Status.BAD_REQUEST).build();
+		}
+		
+		/**
 		 * Verificacion si el catalogo existe
 		 */
 		CatalogDto catalogo = null;
@@ -322,6 +329,14 @@ public class ProductService {
 			log.error(e);
 			return Response.status(Status.BAD_REQUEST).build();
 		}
+		
+		/**
+		 * verificamos variable uom
+		 */
+		if(!verificarUom(uom)){
+			return Response.status(Status.BAD_REQUEST).build();
+		}
+		
 		/**
 		 * Consultamos id de catalogo ingresado y verificamos si el catalogo existe
 		 */
@@ -676,9 +691,9 @@ public class ProductService {
 		while(idOcupado){
 			numeroProductos = numeroProductos+1;
 			nuevoId = "PROD"+numeroProductos;
-			CatalogDto catalogo = null;
+			ProductDto producto = null;
 			try {
-				catalogo = catalogDao.getCatalog(nuevoId);
+				producto = productDao.getProduct(nuevoId);
 			} catch(DAOException expDao){
 				log.error(expDao.getMsjTecnico());
 				System.out.println(expDao.getOrigen());
@@ -689,7 +704,7 @@ public class ProductService {
 				return null;
 			}
 			
-			if(catalogo != null){
+			if(producto != null){
 				idOcupado = true;
 			}else{
 				idOcupado = false;
@@ -721,6 +736,19 @@ public class ProductService {
 			}
 		}
 		return listaAttachments;
+	}
+	
+	/**
+	 * Verifica si es un parametro valido de producto
+	 * @param uom parametro a evaluar
+	 * @return true si es valido, false si no es valido
+	 */
+	public Boolean verificarUom(String uom){
+		if(!"EA".equals(uom) && (!"BX".equals(uom)) && (!"SC".equals(uom)) && (!"PL".equals(uom))
+				&& (!"pcs".equals(uom))&& (!"pkg".equals(uom))&& (!"kg".equals(uom))&& (!"g".equals(uom)))
+			return false;
+		
+		return true;
 	}
 	
 }
