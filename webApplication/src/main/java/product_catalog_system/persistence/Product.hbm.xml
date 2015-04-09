@@ -3,12 +3,12 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated 4/04/2015 10:16:30 AM by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
-    <class name="product_catalog_system.domain.Product" table="product" catalog="store">
+    <class name="product_catalog_system.domain.ProductDto" table="product" catalog="store">
         <id name="id" type="string">
             <column name="id" length="10" />
             <generator class="assigned" />
         </id>
-        <many-to-one name="catalog" class="product_catalog_system.domain.Catalog" fetch="join" lazy="false">
+        <many-to-one name="catalog" class="product_catalog_system.domain.CatalogDto" fetch="join" lazy="false">
             <column name="catalog_id" length="10" not-null="true" />
         </many-to-one>
         <property name="name" type="string">
@@ -30,7 +30,7 @@
             <key>
                 <column name="product" length="10" not-null="true" />
             </key>
-            <one-to-many class="product_catalog_system.domain.Attachments" />
+            <one-to-many class="product_catalog_system.domain.AttachmentsDto" />
         </set>
     </class>
 </hibernate-mapping>

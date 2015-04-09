@@ -53,10 +53,16 @@
         	<property name="sessionFactory" ref="sessionFactory" />
         </bean>
         
+        <bean id="attachmentsDao" class="product_catalog_system.dao.AttachmentsDaoImpl">
+        	<property name="sessionFactory" ref="sessionFactory" />
+        </bean>
+        
         <context:component-scan base-package="product_catalog_system.services"></context:component-scan> 
         
         <bean id="productoService" class="product_catalog_system.services.ProductService">
         	<property name="catalogDao" ref="catalogDao" />
         	<property name="productDao" ref="productDao" />
+        	<property name="attachmentsDao" ref="attachmentsDao" />
         </bean>
+        
 </beans>

@@ -1,13 +1,14 @@
 package product_catalog_system.dao;
 
-import product_catalog_system.domain.Catalog;
+import product_catalog_system.domain.CatalogDto;
+import product_catalog_system.services.util.exception.DAOException;
 
 public interface CatalogDao {
 
-	public void createCatalog(Catalog catalogo);
+	public void createCatalog(CatalogDto catalogo) throws DAOException;
 	
-	public Catalog getCatalog(String id);
+	public CatalogDto getCatalog(String id) throws DAOException;
 	
-	public String maxCatalog();
+	public int countCatalog() throws DAOException;
 	
 }

@@ -2,19 +2,26 @@ package product_catalog_system.dao;
 
 import java.util.List;
 
-import product_catalog_system.domain.Catalog;
-import product_catalog_system.domain.Product;
+import product_catalog_system.domain.CatalogDto;
+import product_catalog_system.domain.ProductDto;
+import product_catalog_system.services.util.exception.DAOException;
 
 public interface ProductDao {
 	
-	public void createUpdateProduct(Product producto);
+	public void createProduct(ProductDto producto) throws DAOException;
 	
-	public Product getProduct(String id);
+	public void updateProduct(ProductDto producto) throws DAOException;
 	
-	public void delete(Product producto);
+	public ProductDto getProduct(String id) throws DAOException;
 	
-	public List<Product> getProductxCatalog(Catalog catalogo, String idProduct);
+	public void delete(ProductDto producto) throws DAOException;
 	
-	public List<Product> listProducts();
+	public List<ProductDto> getProductxCatalog(CatalogDto catalogo, String idProduct) throws DAOException;
+	
+	public List<ProductDto> listProducts() throws DAOException;
+	
+	public List<ProductDto> listProductsFiltered(CatalogDto catalogo, String busqueda) throws DAOException;
+	
+	public int countProducto() throws DAOException;
 	
 }

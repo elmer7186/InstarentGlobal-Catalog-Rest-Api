@@ -3,10 +3,10 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated 4/04/2015 10:16:30 AM by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
-    <class name="product_catalog_system.domain.Catalog" table="catalog" catalog="store">
+    <class name="product_catalog_system.domain.CatalogDto" table="catalog" catalog="store">
         <id name="id" type="string">
             <column name="id" length="10" />
-            <generator class="increment" />
+            <generator class="assigned" />
         </id>
         <property name="name" type="string">
             <column name="name" length="30" />
@@ -18,7 +18,7 @@
             <key>
                 <column name="catalog_id" length="10" not-null="true" />
             </key>
-            <one-to-many class="product_catalog_system.domain.Product" />
+            <one-to-many class="product_catalog_system.domain.ProductDto" />
         </set>
     </class>
 </hibernate-mapping>

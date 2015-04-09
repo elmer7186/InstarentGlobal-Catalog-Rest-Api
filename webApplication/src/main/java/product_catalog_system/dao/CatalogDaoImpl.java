@@ -8,14 +8,22 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
-import product_catalog_system.domain.Catalog;
-import product_catalog_system.domain.Product;
+import product_catalog_system.domain.CatalogDto;
+import product_catalog_system.domain.ProductDto;
+import product_catalog_system.services.util.exception.DAOException;
 
+/**
+ * Clase dao que gestionaran las consultas a la base de datos relacionadas con la tabla Catalog
+ * @author Elmer
+ *
+ */
 public class CatalogDaoImpl extends HibernateDaoSupport implements CatalogDao {
-
-	private static Logger log=Logger.getLogger(CatalogDaoImpl.class);
 	
-	public void createCatalog(Catalog catalogo) {
+	/**
+	 * Metodo que pide a Hibernate la creación de un Catalogo con la
+	 * información que ingresa como parametro
+	 */
+	public void createCatalog(CatalogDto catalogo) throws DAOException{
 		Session session = null;
 		
 		try{
@@ -23,42 +31,62 @@ public class CatalogDaoImpl extends HibernateDaoSupport implements CatalogDao {
 			session.save(catalogo);
 			session.flush();
 		}catch(Exception e){
-			System.out.println("--error en el Dao crear Catalogo-- "+e);
-			log.error(e);
+			DAOException expDAO = new DAOException();
+			expDAO.setMsjTecnico(e.getMessage());
+			expDAO.setOrigen(e);
+			
+			throw expDAO;
 		}finally{
 			session.close();
 		}
 	}
 
-	public Catalog getCatalog(String id){
+	
+	/**
+	 * Pide un catalogo especifico con id ingresado como parametro
+	 */
+	public CatalogDto getCatalog(String id) throws DAOException{
 		Session session = null;
-		Catalog catalogo = null;
+		CatalogDto catalogo = null;
 		
 		try{
 			session = getSession();
-			catalogo = (Catalog)session.get(Catalog.class, id);			
+			catalogo = (CatalogDto)session.get(CatalogDto.class, id);			
 		} catch (Exception e) {
-			System.out.println("--error al intentar obtener Catalogo-- "+e);
-			log.error(e);
+			DAOException expDAO = new DAOException();
+			expDAO.setMsjTecnico(e.getMessage());
+			expDAO.setOrigen(e);
+			
+			throw expDAO;
+		} finally{
+			session.close();
 		}
 		return catalogo;
 	}
 	
-	public String maxCatalog() {
+	/**
+	 * Retorna el numero de items en Catalogo
+	 */
+	public int countCatalog() throws DAOException{
 
 		Session session = null;
-        String registro = null;
+        int registro = 0;
        
         try{
         	
         	session = getSession();
         	
-        	Query query = session.createQuery("select max(id) from Catalog");
-        	registro = (String)query.list().get(0);
+        	Query query = session.createQuery("select count(id) from CatalogDto");
+        	registro = Integer.parseInt(query.list().get(0).toString());
         	
         } catch (Exception e) {
-			System.out.println("--Error en el Dao contar Catalogos-- "+e);
-			log.error(e);
+        	DAOException expDAO = new DAOException();
+			expDAO.setMsjTecnico(e.getMessage());
+			expDAO.setOrigen(e);
+			
+			throw expDAO;
+		} finally{
+			session.close();
 		}
 
         return registro;
