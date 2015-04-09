@@ -78,7 +78,6 @@ public class ProductService {
 	@Path("catalog/{id}/products/{product_id}")
 	public Response obtenerProductos(@PathParam("id")String id, 
 			@PathParam("product_id")String idProduct){
-		
 		List<ProductDto> productosEncontrados = null;
 		CatalogDto catalogo = null;
 		try {
@@ -113,14 +112,26 @@ public class ProductService {
 		 */
 		String productoResponse = "";
 		if(productosEncontrados != null){
-			ProductDto productoEncontrado = productosEncontrados.get(0);
+			ProductDto productoEncontrado = null;
+			if(productosEncontrados.size()>0){
+				productoEncontrado = productosEncontrados.get(0);
+			}else{
+				return Response.status(Status.NOT_FOUND).build();
+			}
 			ProductJson productoJson = new ProductJson();
-			List<String> listaAttachments = obtenerAttachmets(productoEncontrado);
+			List<String> listaAttachments = null;
+			try{
+				listaAttachments = obtenerAttachmets(productoEncontrado);
+			} catch(Exception e){
+				log.error(e);
+				System.out.println(e);
+				return Response.status(Status.NOT_FOUND).build();
+			}
 			productoResponse = productoJson.convertirProductoToJson(productoEncontrado, listaAttachments);
+			System.out.println(productoResponse);
 		}else{
 			return Response.status(Status.NOT_FOUND).build();
 		}
-		
 		return Response.status(Response.Status.OK).entity(productoResponse).build();
 	}
 	
@@ -546,7 +557,14 @@ public class ProductService {
 			}
 			if(contador>=skip && (contador<=limit)){
 				ProductJson productoJson = new ProductJson();
-				List<String> listaAttachments = obtenerAttachmets(producto);
+				List<String> listaAttachments = null;
+				try{
+					listaAttachments = obtenerAttachmets(producto);
+				}catch(Exception e){
+					log.error(e);
+					System.out.println(e);
+					return Response.status(Status.NOT_FOUND).build();
+				}
 				productoResponse = productoResponse + productoJson.convertirProductoToJson(producto, listaAttachments);
 			}
 			contador++;
@@ -564,14 +582,19 @@ public class ProductService {
 	 * ---------------------------------------------------------------------
 	 */
 	
-	public List<String> obtenerAttachmets(ProductDto producto){
+	public List<String> obtenerAttachmets(ProductDto producto) throws Exception{
 		
 		List<AttachmentsDto> attachments = null;
-		try {
-			attachments = attachmentsDao.listAttachmentsByProduct(producto);
-		} catch (Exception e) {
-			System.out.println("Error al intentar obtener Attachments x Product: "+e);
-			log.error(e);
+		if(producto != null){
+			try {
+				attachments = attachmentsDao.listAttachmentsByProduct(producto);
+			} catch (Exception e) {
+				System.out.println("Error al intentar obtener Attachments x Product: "+e);
+				log.error(e);
+				return null;
+			}
+		}else{
+			return null;
 		}
 		
 		List<String> listaAttachments = new ArrayList<String>();
